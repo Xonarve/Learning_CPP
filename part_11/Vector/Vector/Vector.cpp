@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -63,23 +64,44 @@ int _tmain(int argc, _TCHAR* argv[])
 	double target;
 	double dstep;
 
+	fstream fout;
+	fout.open("walk.txt");
+
 	cout << "Enter target distance: (q to quit) ";
 	while (cin >> target) {
 		cout << "Enter a step length: ";
 		if (!(cin >> dstep))
 			break;
-		while (result.magval < target) {
+		fout << steps << ":" << " (x, y) = (" << result.xval() << ", "
+			<< result.yval() << ")\n";
+		while (result.magval() < target) {
 			direction = rand() % 360;
 			step.reset(dstep, direction, Vector::POL);
-			result = 
+			result = result + step;
+			++steps;
+			fout << steps << ":" << " (x, y) = (" << result.xval() << ", "
+				<< result.yval() << ")\n";
 		}
+		fout << "After " << steps << " steps, the subject "
+			<< "has the following location:\n";
+		fout << result << endl;
+		result.polar_mode();
+		fout << "or\n" << result << endl;
+		fout << "Average outward distance per step = "
+			<< result.magval() / steps << endl;
+		steps = 0;
+		result.reset(0.0, 0.0);
+		cout << "Enter target distance: (q to quit) ";
 	}
+	cin.clear();
+	while (cin.get() != '\n')
+		continue;
+	fout.close();
 
 	return 0;
 }
 
 const double Rad_to_deg = 45.0 / std::atan(1.0);
-
 void Vector::set_mag() {
 	mag = std::sqrt(x * x + y * y);
 }
@@ -174,5 +196,8 @@ std::ostream& operator<<(std::ostream& os, const Vector& v) {
 		os << "(m, a) = (" << v.mag << ", " << v.ang * Rad_to_deg << ")";
 	else
 		os << "Vector mode's invalid/a";
+
+	
+
 	return os;
 }
