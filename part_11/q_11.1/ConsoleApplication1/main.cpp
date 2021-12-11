@@ -6,11 +6,13 @@
 
 class Stonewt {
 	static const int Pds_per_stn = 14;
+	enum Mode {st, StoneAndPds, poundS};
 	int stone;
 	double pds_left;
 	double pounds;
+	Mode mode_;
 public:
-	Stonewt(double pds);
+	Stonewt(double amount, Stonewt::Mode mode);
 	Stonewt(int stn, double pds);
 	Stonewt();
 	~Stonewt() {};
@@ -25,20 +27,33 @@ public:
 	friend Stonewt operator*(double m, const Stonewt& st);
 };
 
-Stonewt::Stonewt(double pds) {
-	stone = int(pds) / Pds_per_stn;
-	pds_left = int(pds) % Pds_per_stn + pds - int(pds);
-	pounds = pds;
+Stonewt::Stonewt(double amount, Stonewt::Mode mode) {
+	mode_ = mode;
+
+	if (mode == st) {
+		stone = amount;
+		pds_left = 0;
+		pounds = amount * Pds_per_stn;
+	}
+	else if (mode == poundS) {
+		pounds = amount;
+		stone = int(amount) / Pds_per_stn;
+		pds_left = int(amount) % Pds_per_stn + amount - int(amount);
+	}
+	else
+		std::cout << "Incorrect mode for this construct/a/n";
 }
 
 Stonewt::Stonewt(int stn, double pds) {
 	stone = stn;
 	pds_left = pds;
 	pounds = stn * Pds_per_stn + pds;
+	mode_ = StoneAndPds;
 }
 
 Stonewt::Stonewt() {
 	stone = pounds = pds_left = 0;
+	mode_ = poundS;
 }
 
 void Stonewt::show_stn() const {
