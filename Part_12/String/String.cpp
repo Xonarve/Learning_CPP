@@ -6,53 +6,155 @@
 #include <cstring>
 
 class String {
-	/*char* str_;*/
+	char *str;
 	int len;
-	/*static int num_strings;*/
+	static int num_strings;
+	static const int cinlim = 80;
 public:
-	String(int value);
-	String() {};
-	//String();
-	//~String();
+	String(const char* s);
+	String();
+	String(const String& s);
+	~String();
+	int length() const { return len; }
 
-	//friend std::ostream& operator<<(std::ostream& os, const String& str);
+	String &operator=(const String &s);
+	String &operator=(const char *s);
+	char &operator[](int i);
+	const char &operator[](int i) const;
+	friend std::ostream &operator<<(std::ostream &os, const String &s);
+	friend std::istream &operator>>(std::istream &is, String &s);
+	friend bool operator<(const String &s1, const String &s2);
+	friend bool operator>(const String &s1, const String &s2);
+	friend bool operator==(const String &s1, const String &s2);
+	static int HowMany() { return num_strings; }
 };
+
+const int arsize = 10;
+const int MaxLen = 81;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	String s(5);
-	String s1;
+	using std::cout;
+	using std::cin;
+	using std::endl;
+	String name;
+	cout << "Hi, what is your name?\n>> ";
+	cin >> name;
+	cout << name << ", please enter up to " << arsize
+		<< " short sayings <empty line to quit>:\n";
+	String sayings[arsize];
+	char temp[MaxLen];
+	int i;
+	for (i = 0; i < arsize; ++i) {
+		cout << i + 1 << ": ";
+		cin.get(temp, MaxLen);
+		while (cin && cin.get() != '\n')
+			continue;
+		if (!(cin) || temp[0] == '\0')
+			break;
+		else
+			sayings[i] = temp;
+	}
+	int total = i;
+	if (total > 0) {
+		cout << "Here are your sayings:\n";
+		for (i = 0; i < total; ++i)
+			cout << sayings[i][0] << ": " << sayings[i] << endl;
+		int shortest = 0;
+		int first = 0;
+		for (i = 1; i < total; ++i) {
+			if (sayings[i].length() < sayings[shortest].length())
+				shortest = i;
+			if (sayings[i] < sayings[first])
+				first = i;
+		}
+		cout << "Shortest saying:\n" << sayings[shortest] << endl;
+		cout << "First alphabetically:\n" << sayings[first] << endl;
+		cout << "This program used " << String::HowMany() << " strings objects. Bye.\n";
+	}
+	else
+		cout << "No input! Bye.\n";
+
 	return 0;
 }
 
-//int String::num_strings = 0;
+int String::num_strings = 0;
 
-String::String(int value) {
-	/*len = std::strlen(str);
+String::String(const char *s) {
+	len = std::strlen(s);
 	str = new char[len + 1];
-	strcpy_s(str_, len, str);
-	num_strings++;
-	std::cout << num_strings << ": " << str_ << "object created\n";*/
-
+	strcpy_s(str, len + 1, s);
+	++num_strings;
 }
 
-//String::String() {
-//	len = 4;
-//	str_ = new char[len];
-//	strcpy_s(str_, len, "C++");
-//	num_strings++;
-//	std::cout << num_strings << ": " << str_ << "object created\n";
-//}
-//
-//String::~String() {
-//	std::cout << str_ << " object deleted\n";
-//	--num_strings;
-//	delete[] str_;
-//	std::cout << "Objects left: " << num_strings << std::endl;
-//}
-//
-//std::ostream &operator<<(std::ostream& os, const String& str) {
-//	os << str.str_ << std::endl;
-//
-//	return os;
-//}
+String::String() {
+	len = 0;
+	str = new char[len + 1];
+	str[0] = '\0';
+	++num_strings;
+}
+
+String::String(const String &s) {
+	len = s.len;
+	str = new char[len + 1];
+	strcpy_s(str, len + 1, s.str);
+	++num_strings;
+}
+
+String::~String() {
+	--num_strings;
+	delete[] str;
+}
+
+String & String::operator=(const String &s) {
+	if (&s == this)
+		return *this;
+	delete[] str;
+	len = s.len;
+	str = new char[len + 1];
+	strcpy_s(str, len + 1, s.str);
+	return *this;
+}
+
+String & String::operator=(const char *s) {
+	delete[] str;
+	len = strlen(s);
+	str = new char[len + 1];
+	strcpy_s(str, len + 1, s);
+	return *this;
+}
+
+char & String::operator[](int i) {
+	return str[i];
+}
+
+const char & String::operator[](int i) const {
+	return str[i];
+}
+
+bool operator<(const String &s1, const String &s2) {
+	return (strcmp(s1.str, s2.str) < 0);
+}
+
+bool operator>(const String &s1, const String &s2) {
+	return s2.str < s1.str;
+}
+
+bool operator==(const String &s1, const String &s2) {
+	return (strcmp(s1.str, s2.str) == 0);
+}
+
+std::ostream & operator<<(std::ostream &os, const String &s) {
+	os << s.str;
+	return os;
+}
+
+std::istream & operator>>(std::istream &is, String &s) {
+	char temp[String::cinlim];
+	is.get(temp, String::cinlim);
+	if (is)
+		s = temp;
+	while (is && is.get() != '\n')
+		continue;
+	return is;
+}

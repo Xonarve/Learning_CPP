@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BA911A58-265C-4D30-9603-58A3A6D0FEAD}</ProjectGuid>
+    <ProjectGuid>{68E53613-30C3-470C-9C1A-0EB07B7B6820}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>String</RootNamespace>
   </PropertyGroup>
