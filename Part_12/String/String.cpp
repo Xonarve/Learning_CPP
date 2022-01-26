@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
+#include <ctime>
 
 class String {
 	char *str;
@@ -60,17 +62,23 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "Here are your sayings:\n";
 		for (i = 0; i < total; ++i)
 			cout << sayings[i][0] << ": " << sayings[i] << endl;
-		int shortest = 0;
-		int first = 0;
+		String *shortest = &sayings[0];
+		String *first = &sayings[0];
 		for (i = 1; i < total; ++i) {
-			if (sayings[i].length() < sayings[shortest].length())
-				shortest = i;
-			if (sayings[i] < sayings[first])
-				first = i;
+			if (shortest->length() > sayings[i].length())
+				shortest = &sayings[i];
+			if (*first > sayings[i])
+				first = &sayings[i];
 		}
-		cout << "Shortest saying:\n" << sayings[shortest] << endl;
-		cout << "First alphabetically:\n" << sayings[first] << endl;
-		cout << "This program used " << String::HowMany() << " strings objects. Bye.\n";
+		cout << "Shortest saying:\n" << *shortest << endl;
+		cout << "First alphabetically:\n" << *first << endl;
+		
+		srand(time(0));
+		int choice = rand() % total;
+
+		String *favorite = new String(sayings[choice]);
+		cout << "My favorite saying:\n" << *favorite << endl;
+		delete favorite;
 	}
 	else
 		cout << "No input! Bye.\n";
