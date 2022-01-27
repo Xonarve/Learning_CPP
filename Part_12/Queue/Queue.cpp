@@ -6,7 +6,7 @@
 typedef int Item;
 
 class Queue {
-	enum {Q_SIZE = 10};
+	enum { Q_SIZE = 10 };
 	struct Node {
 		Item item;
 		struct Node *next;
@@ -33,4 +33,16 @@ int _tmain(int argc, _TCHAR* argv[])
 Queue::Queue(int qs) : qsize(qs) {
 	front = rear = nullptr;
 	items = 0;
+}
+
+bool Queue::isempty() const {
+	return items;
+}
+
+bool Queue::isfull() const {
+	return (items == qsize);
+}
+
+int Queue::queueconst() const {
+	return items;
 }
