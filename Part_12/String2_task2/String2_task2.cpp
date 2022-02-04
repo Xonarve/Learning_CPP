@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <ctime>
+#include <cctype>
 
 class String {
 	char *str;
@@ -17,20 +18,24 @@ public:
 	String();
 	String(const String& s);
 	~String();
+
 	int length() const { return len; }
+	bool stringlow();
+	bool stringup();
+	int amountOfSymbol(char ch);
+
 	String &operator=(const String &s);
 	String &operator=(const char *s);
-	String operator+(const String &s);
 	char &operator[](int i);
 	const char &operator[](int i) const;
+
 	friend std::ostream &operator<<(std::ostream &os, const String &s);
 	friend std::istream &operator>>(std::istream &is, String &s);
 	friend bool operator<(const String &s1, const String &s2);
 	friend bool operator>(const String &s1, const String &s2);
 	friend bool operator==(const String &s1, const String &s2);
+	friend String operator+(const String &s1, const String &s2);
 	static int HowMany() { return num_strings; }
-
-	void show_string() const;
 };
 
 const int arsize = 10;
@@ -41,54 +46,46 @@ int _tmain(int argc, _TCHAR* argv[])
 	using std::cout;
 	using std::cin;
 	using std::endl;
-	String word1("first Word_1");
-	String word2("second Word_2");
-	String sum_word = word1 + word2;
-	cout << sum_word << endl;
-	/*String name;
-	cout << "Hi, what is your name?\n>> ";
-	cin >> name;
-	cout << name << ", please enter up to " << arsize
-		<< " short sayings <empty line to quit>:\n";
-	String sayings[arsize];
-	char temp[MaxLen];
-	int i;
-	for (i = 0; i < arsize; ++i) {
-		cout << i + 1 << ": ";
-		cin.get(temp, MaxLen);
-		while (cin && cin.get() != '\n')
-			continue;
-		if (!(cin) || temp[0] == '\0')
+	
+	String s1(" and I am a C++ student.");
+	String s2("Please enter your name: ");
+	String s3;
+
+	cout << s2;
+	cin >> s3;
+	
+	s2 = "My name is " + s3;
+	cout << s2 << ".\n";
+
+	s2 = s2 + s1;
+	s2.stringup();
+	cout << "The string\n" << s2 << "\ncontains " << s2.amountOfSymbol('A')
+		<< " 'A' characters in it.\n";
+
+	s1 = "red";
+
+	String rgb[3] = { String(s1), String("green"), String("blue") };
+
+	cout << "Enter the name of a primary color for mixing light: ";
+	String ans;
+	bool succsess = false;
+
+	while (cin >> ans) {
+		ans.stringlow();
+		for (int i = 0; i < 3; ++i) {
+			if (ans == rgb[i]) {
+				cout << "That's right!\n";
+				succsess = true;
+				break;
+			}
+		}
+		if (succsess)
 			break;
 		else
-			sayings[i] = temp;
+			cout << "Try again!\n";
 	}
-	int total = i;
-	if (total > 0) {
-		cout << "Here are your sayings:\n";
-		for (i = 0; i < total; ++i)
-			cout << sayings[i][0] << ": " << sayings[i] << endl;
-		String *shortest = &sayings[0];
-		String *first = &sayings[0];
-		for (i = 1; i < total; ++i) {
-			if (shortest->length() > sayings[i].length())
-				shortest = &sayings[i];
-			if (*first > sayings[i])
-				first = &sayings[i];
-		}
-		cout << "Shortest saying:\n" << *shortest << endl;
-		cout << "First alphabetically:\n" << *first << endl;
+	cout << "Bye!\n";
 
-		srand(time(0));
-		int choice = rand() % total;
-
-		String *favorite = new String(sayings[choice]);
-		cout << "My favorite saying:\n" << *favorite << endl;
-		delete favorite;
-	}
-	else
-		cout << "No input! Bye.\n";
-*/
 	return 0;
 }
 
@@ -120,6 +117,27 @@ String::~String() {
 	delete[] str;
 }
 
+bool String::stringlow() {
+	for (int i = 0; i < len; ++i)
+		str[i] = tolower(str[i]);
+	return true;
+}
+
+bool String::stringup() {
+	for (int i = 0; i < len; ++i)
+		str[i] = toupper(str[i]);
+	return true;
+}
+
+int String::amountOfSymbol(char ch) {
+	int count = 0;
+	for (int i = 0; i < len; ++i) {
+		if (str[i] == ch)
+			++count;
+	}
+	return count;
+}
+
 String & String::operator=(const String &s) {
 	if (&s == this)
 		return *this;
@@ -136,22 +154,6 @@ String & String::operator=(const char *s) {
 	str = new char[len + 1];
 	strcpy_s(str, len + 1, s);
 	return *this;
-}
-
-String String::operator+(const String &s) {
-	String temp;
-	delete[] temp.str;
-	temp.len = strlen(str) + strlen(s.str);
-	temp.str = new char[temp.len + 1];
-	strcpy_s(temp.str, len + 1, str);
-	std::cout << temp.len - len << std::endl;
-	std::cout << strlen(s.str) << std::endl;
-	strcat_s(temp.str, temp.len - len + 1, s.str);
-	/*temp.len = 500;
-	temp.str = new char[temp.len + 1];
-	strcpy_s(temp.str, temp.len + 1, str);
-	strcat_s(temp.str, temp.len + 1, s.str);*/
-	return temp;
 }
 
 char & String::operator[](int i) {
@@ -174,6 +176,16 @@ bool operator==(const String &s1, const String &s2) {
 	return (strcmp(s1.str, s2.str) == 0);
 }
 
+String operator+(const String &s1, const String &s2) {
+	String temp;
+	delete[] temp.str;
+	temp.len = strlen(s1.str) + strlen(s2.str);
+	temp.str = new char[temp.len + 1];
+	strcpy_s(temp.str, s1.len + 1, s1.str);
+	strcat_s(temp.str, temp.len + 1, s2.str);
+	return temp;
+}
+
 std::ostream & operator<<(std::ostream &os, const String &s) {
 	os << s.str;
 	return os;
@@ -187,9 +199,4 @@ std::istream & operator>>(std::istream &is, String &s) {
 	while (is && is.get() != '\n')
 		continue;
 	return is;
-}
-
-
-void String::show_string() const {
-	std::cout << str << std::endl;
 }
