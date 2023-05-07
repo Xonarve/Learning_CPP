@@ -1,0 +1,15 @@
+﻿Build started 14.08.2022 17:13:12.
+     1>Project "C:\Users\Admin_Laptop\Projects\Part_13\acctabc.h\acctabc.h.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\VisualStudio\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\acctabc.h.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt acctabc.cpp
+         acctabc.cpp
+       Link:
+         C:\VisualStudio\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Admin_Laptop\Projects\Part_13\acctabc.h\Debug\acctabc.h.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Admin_Laptop\Projects\Part_13\acctabc.h\Debug\acctabc.h.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Admin_Laptop\Projects\Part_13\acctabc.h\Debug\acctabc.h.lib" /MACHINE:X86 Debug\acctabc.obj
+         Debug\useacctabc.obj
+         Debug\stdafx.obj
+         acctabc.h.vcxproj -> C:\Users\Admin_Laptop\Projects\Part_13\acctabc.h\Debug\acctabc.h.exe
+     1>Done Building Project "C:\Users\Admin_Laptop\Projects\Part_13\acctabc.h\acctabc.h.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.37
